@@ -26,15 +26,14 @@
 </div> <!-- /navbar -->
 
 <div class="container">
-	<!-- errors -->
-	<% errors.forEach(function(err){ %>
-	<div class="alert alert-danger">
-		<%= error %>	
-	</div>
-	<% })	%>
-	<!-- infos -->
-	<% infos.forEach(function(err){ %>
-	<div class="alert alert-info">
-		<%= info %>	
-	</div>
-	<% }) %>
+	  <% errors.forEach(function(error) { %>
+    <div class="alert alert-danger" role="alert">
+      <%= error %>
+    </div>
+  <% }) %>
+
+  <% infos.forEach(function(info) { %>
+    <div class="alert alert-info" role="alert">
+      <%= info %>
+    </div>
+  <% }) %>

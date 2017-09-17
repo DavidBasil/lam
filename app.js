@@ -1,42 +1,43 @@
-var express = require('express')
-var mongoose = require('mongoose')
-var bodyParser = require('body-parser')
-var cookieParser = require('cookie-parser')
-var session = require('express-session')
-var flash = require('connect-flash')
-var logger = require('morgan')
-var routes = require('./routes')
+var bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
+var express = require("express");
+var flash = require("connect-flash");
+var mongoose = require("mongoose");
+var passport = require("passport");
+var path = require("path");
+var session = require("express-session");
+var setUpPassport = require('./setuppassport')
 
-var app = express()
+//var setUpPassport = require("./setuppassport");
+var routes = require("./routes");
 
-// logger
-app.use(logger('dev'))
+var app = express();
+mongoose.connect("mongodb://localhost:27017/test");
+setUpPassport();
 
-// mongoose
-mongoose.connect('mongodb://localhost/nodekb')
+app.set("port", process.env.PORT || 3000);
 
-//port
-app.set('port', process.env.PORT || 3000)
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 
-// view engine
-app.set('views', './views')
-app.set('view engine', 'ejs')
+app.use(express.static(path.join(__dirname, "public")));
 
-// bodyParser, cookies and session
-app.use(bodyParser.urlencoded({extended: false}))
-app.use(cookieParser())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+
 app.use(session({
-	secret: "TKRv0IJs=HYqrvagQ#&!F!%V]Ww/4KiVs$s,<<MX",
-	resave: true,
-	saveUninitialized: true
-}))
+  secret: "LUp$Dg?,I#i&owP3=9su+OB%`JgL4muLF5YJ~{;t",
+  resave: true,
+  saveUninitialized: true
+}));
 
-// flash
-app.use(flash())
-// routes
-app.use(routes)
+app.use(flash());
 
-// listen
-app.listen(app.get('port'), function(){
-	console.log('Server started on port ' + app.get('port'))
-})
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(routes);
+
+app.listen(app.get("port"), function() {
+  console.log("Server started on port " + app.get("port"));
+});
